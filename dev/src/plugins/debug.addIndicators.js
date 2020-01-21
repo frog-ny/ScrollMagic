@@ -1,4 +1,13 @@
 /*!
+ * ScrollMagic v2.0.7 (2019-05-07)
+ * The javascript library for magical scroll interactions.
+ * (c) 2019 Jan Paepke (@janpaepke)
+ * Project Website: http://scrollmagic.io
+ * 
+ * @version 2.0.7
+ * @license Dual licensed under MIT license and GPL.
+ * @author Jan Paepke - e-mail@janpaepke.de
+ *
  * @file Debug Extension for ScrollMagic.
  */
 /**
@@ -9,29 +18,28 @@
  * To have access to this extension, please include `plugins/debug.addIndicators.js`.
  * @mixin debug.addIndicators
  */
+import ScrollMagic from 'scrollmagic';
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['ScrollMagic'], factory);
-    } else if (typeof exports === 'object') {
-    		// CommonJS
-    		factory(require('scrollmagic'));
-    } else {
-    		// no browser global export needed, just execute
-        factory(root.ScrollMagic || (root.jQuery && root.jQuery.ScrollMagic));
-    }
-}(this, function(ScrollMagic) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(['ScrollMagic'], factory);
+	} else if (typeof exports === 'object') {
+		// CommonJS
+		factory(require('scrollmagic'));
+	} else {
+		// no browser global export needed, just execute
+		factory(ScrollMagic || (jQuery && jQuery.ScrollMagic));
+	}
+}(this, function (ScrollMagic) {
 	"use strict";
 	var NAMESPACE = "debug.addIndicators";
 
-	// (BUILD) - REMOVE IN MINIFY - START
 	var
 		console = window.console || {},
-		err = Function.prototype.bind.call(console.error || console.log || function() {}, console);
+		err = Function.prototype.bind.call(console.error || console.log || function () {}, console);
 	if (!ScrollMagic) {
 		err("(" + NAMESPACE + ") -> ERROR: The ScrollMagic main module could not be found. Please make sure it's loaded before this plugin or use an asynchronous loader like requirejs.");
 	}
-	// (BUILD) - REMOVE IN MINIFY - END
 
 	// plugin settings
 	var
@@ -51,14 +59,12 @@
 			Scene = this,
 			_indicator;
 
-		// (BUILD) - REMOVE IN MINIFY - START
 		var log = function () {
 			if (Scene._log) { // not available, when main source minified
 				Array.prototype.splice.call(arguments, 1, 0, "(" + NAMESPACE + ")", "->");
 				Scene._log.apply(this, arguments);
 			}
 		};
-		// (BUILD) - REMOVE IN MINIFY - END
 
 		/**
 		 * Add visual indicators for a ScrollMagic.Scene.  
@@ -80,7 +86,7 @@
 		 * @param {string} [options.colorEnd=red] - CSS color definition for the end indicator.
 		 * @param {string} [options.colorTrigger=blue] - CSS color definition for the trigger indicator.
 		 */
-		Scene.addIndicators = function(options) {
+		Scene.addIndicators = function (options) {
 			if (!_indicator) {
 				var
 					DEFAULT_OPTIONS = {
@@ -91,7 +97,7 @@
 						colorEnd: "red",
 						colorTrigger: "blue",
 					};
-				
+
 				options = _util.extend({}, DEFAULT_OPTIONS, options);
 
 				_autoindex++;
@@ -118,7 +124,7 @@
 		 * scene.removeIndicators()
 		 *
 		 */
-		Scene.removeIndicators = function() {
+		Scene.removeIndicators = function () {
 			if (_indicator) {
 				_indicator.remove();
 				this.off("*.plugin_addIndicators");
@@ -164,7 +170,6 @@
 				groups: []
 			};
 
-		// (BUILD) - REMOVE IN MINIFY - START
 		var log = function () {
 			if (Controller._log) { // not available, when main source minified
 				Array.prototype.splice.call(arguments, 1, 0, "(" + NAMESPACE + ")", "->");
@@ -174,8 +179,7 @@
 		if (Controller._indicators) {
 			log(2, "WARNING: Scene already has a property '_indicators', which will be overwritten by plugin.");
 		}
-		// (BUILD) - REMOVE IN MINIFY - END
-	
+
 		// add indicators container
 		this._indicators = _indicators;
 		/*
@@ -186,7 +190,7 @@
 			bounds position on container scroll or resize (to keep alignment to bottom/right)
 			trigger position on container resize, window resize (if container isn't document) and window scroll (if container isn't document)
 		*/
-		
+
 		// event handler for when associated bounds markers need to be repositioned
 		var handleBoundsPositionChange = function () {
 			_indicators.updateBoundsPositions();
@@ -210,16 +214,17 @@
 		// updates the position of the bounds container to aligned to the right for vertical containers and to the bottom for horizontal
 		this._indicators.updateBoundsPositions = function (specificIndicator) {
 			var // constant for all bounds
-				groups = specificIndicator ?
-								[_util.extend({}, specificIndicator.triggerGroup, {members: [specificIndicator]})]: // create a group with only one element
-								_indicators.groups, // use all
+				groups = specificIndicator ? [_util.extend({}, specificIndicator.triggerGroup, {
+					members: [specificIndicator]
+				})] : // create a group with only one element
+				_indicators.groups, // use all
 				g = groups.length,
 				css = {},
-				paramPos = _vertical ? "left"  : "top",
+				paramPos = _vertical ? "left" : "top",
 				paramDimension = _vertical ? "width" : "height",
 				edge = _vertical ?
-							_util.get.scrollLeft(_container) + _util.get.width(_container) - EDGE_OFFSET:
-							_util.get.scrollTop(_container) + _util.get.height(_container) - EDGE_OFFSET,
+				_util.get.scrollLeft(_container) + _util.get.width(_container) - EDGE_OFFSET :
+				_util.get.scrollTop(_container) + _util.get.height(_container) - EDGE_OFFSET,
 				b, triggerSize, group;
 			while (g--) { // group loop
 				group = groups[g];
@@ -238,18 +243,21 @@
 				groups = specificGroup ? [specificGroup] : _indicators.groups,
 				i = groups.length,
 				container = _isDocument ? document.body : _container,
-				containerOffset = _isDocument ?  {top: 0, left: 0} : _util.get.offset(container, true),
+				containerOffset = _isDocument ? {
+					top: 0,
+					left: 0
+				} : _util.get.offset(container, true),
 				edge = _vertical ?
-							_util.get.width(_container) - EDGE_OFFSET :
-							_util.get.height(_container) - EDGE_OFFSET,
-				paramDimension = _vertical ? "width"  : "height",
+				_util.get.width(_container) - EDGE_OFFSET :
+				_util.get.height(_container) - EDGE_OFFSET,
+				paramDimension = _vertical ? "width" : "height",
 				paramTransform = _vertical ? "Y" : "X";
 			var // changing vars
-					group,
-					elem,
-					pos,
-					elemSize,
-					transform;
+				group,
+				elem,
+				pos,
+				elemSize,
+				transform;
 			while (i--) {
 				group = groups[i];
 				elem = group.element;
@@ -262,9 +270,9 @@
 					left: containerOffset.left + (_vertical ? edge - group.members[0].options.indent : pos)
 				});
 				_util.css(elem.firstChild.firstChild, {
-					"-ms-transform" : transform,
-					"-webkit-transform" : transform,
-					"transform" : transform
+					"-ms-transform": transform,
+					"-webkit-transform": transform,
+					"transform": transform
 				});
 			}
 		};
@@ -324,14 +332,12 @@
 			_vertical,
 			_ctrl;
 
-		// (BUILD) - REMOVE IN MINIFY - START
 		var log = function () {
 			if (Scene._log) { // not available, when main source minified
 				Array.prototype.splice.call(arguments, 1, 0, "(" + NAMESPACE + ")", "->");
 				Scene._log.apply(this, arguments);
 			}
 		};
-		// (BUILD) - REMOVE IN MINIFY - END
 
 		options.name = options.name || _autoindex;
 
@@ -360,7 +366,9 @@
 			}
 			if (!isDocument && _util.css(_boundsContainer, "position") === 'static') {
 				// position mode needed for correct positioning of indicators
-				_util.css(_boundsContainer, {position: "relative"});
+				_util.css(_boundsContainer, {
+					position: "relative"
+				});
 			}
 
 			// add listeners for updates
@@ -391,12 +399,12 @@
 					_ctrl._indicators.updateTriggerGroupLabel(group);
 					_ctrl._indicators.updateTriggerGroupPositions(group);
 					Indicator.triggerGroup = undefined;
-	 			} else {
-	 				// remove complete group
-	 				removeTriggerGroup();
-	 			}
+				} else {
+					// remove complete group
+					removeTriggerGroup();
+				}
 				removeBounds();
-				
+
 				log(3, "removed indicators");
 			}
 		};
@@ -430,20 +438,20 @@
 			var v = _ctrl.info("vertical");
 			// apply stuff we didn't know before...
 			_util.css(_elemStart.firstChild, {
-				"border-bottom-width" : v ? 1 : 0,
-				"border-right-width" :	v ? 0 : 1,
-				"bottom":								v ? -1 : options.indent,
-				"right":								v ? options.indent : -1,
-				"padding":							v ? "0 8px" : "2px 4px",
+				"border-bottom-width": v ? 1 : 0,
+				"border-right-width": v ? 0 : 1,
+				"bottom": v ? -1 : options.indent,
+				"right": v ? options.indent : -1,
+				"padding": v ? "0 8px" : "2px 4px",
 			});
 			_util.css(_elemEnd, {
-				"border-top-width" :		v ? 1 : 0,
-				"border-left-width" : 	v ? 0 : 1,
-				"top":									v ? "100%" : "",
-				"right":								v ? options.indent : "",
-				"bottom":								v ? "" : options.indent,
-				"left":									v ? "" : "100%",
-				"padding":							v ? "0 8px" : "2px 4px"
+				"border-top-width": v ? 1 : 0,
+				"border-left-width": v ? 0 : 1,
+				"top": v ? "100%" : "",
+				"right": v ? options.indent : "",
+				"bottom": v ? "" : options.indent,
+				"left": v ? "" : "100%",
+				"padding": v ? "0 8px" : "2px 4px"
 			});
 			// append
 			_boundsContainer.appendChild(_elemBounds);
@@ -596,10 +604,10 @@
 			_util.css(inner, {
 				position: "absolute",
 				overflow: "visible",
-				"border-width" : 0,
-				"border-style" : "solid",
+				"border-width": 0,
+				"border-style": "solid",
 				color: color,
-				"border-color" : color
+				"border-color": color
 			});
 			var e = document.createElement('div');
 			// wrapper
@@ -618,10 +626,10 @@
 			_util.css(e, {
 				position: "absolute",
 				overflow: "visible",
-				"border-width" : 0,
-				"border-style" : "solid",
+				"border-width": 0,
+				"border-style": "solid",
 				color: color,
-				"border-color" : color
+				"border-color": color
 			});
 			return e;
 		},
@@ -631,7 +639,7 @@
 				position: "absolute",
 				overflow: "visible",
 				"white-space": "nowrap",
-				"pointer-events" : "none",
+				"pointer-events": "none",
 				"font-size": FONT_SIZE
 			});
 			e.style.zIndex = ZINDEX;
@@ -645,14 +653,14 @@
 				position: "relative",
 			});
 			// inner wrapper for right: 0 and main element has no size
-			var w = document.createElement('div'); 
+			var w = document.createElement('div');
 			_util.css(w, {
 				position: "absolute",
 				overflow: "visible",
-				"border-width" : 0,
-				"border-style" : "solid",
+				"border-width": 0,
+				"border-style": "solid",
 				color: color,
-				"border-color" : color
+				"border-color": color
 			});
 			w.appendChild(inner);
 			// wrapper
@@ -661,7 +669,7 @@
 				position: "fixed",
 				overflow: "visible",
 				"white-space": "nowrap",
-				"pointer-events" : "none",
+				"pointer-events": "none",
 				"font-size": FONT_SIZE
 			});
 			e.style.zIndex = ZINDEX;
